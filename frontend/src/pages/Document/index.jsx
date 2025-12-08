@@ -90,7 +90,6 @@ export const Document = () => {
       setDocumentoIdState(response.documento.id);
       setIsEditMode(true);
 
-      notify("Documento carregado para edição!", "success");
     } catch (error) {
       console.error("Erro ao carregar documento:", error);
       notify("Erro ao carregar documento. Tente novamente.", "error");
@@ -132,8 +131,6 @@ export const Document = () => {
         }
       );
 
-      notify("Documento atualizado com sucesso!", "success");
-      console.log("Documento atualizado:", response);
 
       return response;
     } catch (error) {
@@ -224,7 +221,7 @@ const salvarOuAtualizarReceita = async () => {
             body: JSON.stringify(dadosParaEnviar),
           }
         );
-        notify("Receita atualizada com sucesso!", "success");
+
       } else {
         response = await apiFetchJson(
           `${import.meta.env.VITE_API_URL}/criar-receita/`,
@@ -237,7 +234,7 @@ const salvarOuAtualizarReceita = async () => {
           }
         );
         setReceitaId(response.id);
-        notify("Receita criada com sucesso!", "success");
+        
       }
 
       // NOVO: Guarda os dados atuais após salvar
@@ -292,8 +289,6 @@ const salvarOuAtualizarReceita = async () => {
         }
       );
 
-      notify("Documento criado com sucesso!", "success");
-      console.log("Documento criado:", response);
 
       setDocumentoIdState(response.id);
       return response.id;

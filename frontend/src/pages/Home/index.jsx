@@ -67,6 +67,52 @@ export const Home = () => {
     }
   };
 
+  // Função para excluir cliente
+  const handleDeleteDocument = async (documentId) => {
+    if (!window.confirm("Tem certeza que deseja excluir este documento?")) return;
+
+    try {
+      await apiFetch(
+        `${import.meta.env.VITE_API_URL}/excluir-documento/${documentId}/`,
+        {
+          method: "DELETE",
+        }
+      );
+      await refreshData("clients");
+      await refreshData("documents");
+    } catch (error) {
+      console.error("Erro:", error);
+      alert("Erro ao excluir");
+    }
+  };
+  
+  const handleDeleteClient = async (clientId) => {
+    if (!window.confirm("Tem certeza que deseja excluir este cliente?")) return;
+
+    try {
+      await apiFetch(
+        `${import.meta.env.VITE_API_URL}/excluir-cliente/${clientId}/`,
+        {
+          method: "DELETE",
+        }
+      );
+      await refreshData("clients");
+      await refreshData("documents");
+    } catch (error) {
+      console.error("Erro:", error);
+      alert("Erro ao excluir");
+    }
+  };
+
+  // Passa a função correta baseada na aba
+  const handleRemove = (id) => {
+    if (activeTab === "documents") {
+      handleDeleteDocument(id);
+    } else {
+      handleDeleteClient(id);
+    }
+  };
+
   // Função para atualizar dados do cliente
   const handleUpdateClient = async (clientId, updatedData) => {
     try {
@@ -159,6 +205,7 @@ export const Home = () => {
                   items={currentItems}
                   searchTerm={searchTerm}
                   onItemClick={handleItemClick}
+                  onRemove={handleRemove}
                 />
               ) : activeTab === "documents" ? (
                 <EmptyState

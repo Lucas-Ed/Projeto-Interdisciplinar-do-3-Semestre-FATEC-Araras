@@ -12,6 +12,7 @@ from api.serializers import DocumentoCreateSerializer, DocumentoSerializer
 from django.shortcuts import get_object_or_404
 import os
 from django.conf import settings
+from rest_framework import generics
 
 
 vertical = """
@@ -794,3 +795,11 @@ class DocumentoUpdateView(DocumentoBaseView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+      
+      
+  
+class DocumentoDeleteView(DocumentoBaseView, generics.DestroyAPIView):
+    serializer_class = DocumentoSerializer
+
+    def get_queryset(self):
+      return Documento.objects.filter(usuario=self.request.user)

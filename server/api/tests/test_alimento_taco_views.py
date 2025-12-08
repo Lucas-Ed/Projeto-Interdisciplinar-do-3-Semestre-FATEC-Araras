@@ -37,7 +37,7 @@ class AlimentoTacoViewsTest(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_filter_by_nome(self):
-        response = self.client.get(self.url, {'nome': 'Alimento Original'})
+        response = self.client.get(self.url, {'search': 'Alimento Original'})
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.data), 1)
         self.assertEqual(response.data[0]['nome'], 'Alimento Original')

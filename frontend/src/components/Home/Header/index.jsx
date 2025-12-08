@@ -38,8 +38,7 @@ export const Header = ({ userName }) => {
       const result = await logout();
 
       if (result?.success) {
-        notify("Logout realizado com sucesso!", "success");
-        console.log("✅ Logout bem-sucedido, redirecionando...");
+
         navigate("/login");
       }
     } catch (error) {

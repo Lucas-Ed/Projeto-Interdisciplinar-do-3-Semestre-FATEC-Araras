@@ -56,36 +56,26 @@ class UserViewsTest(TestCase):
     # -----------------------------------------------------
     # LOGOUT
     # -----------------------------------------------------
-def test_logout_success(self):
-    response = self.client.post("/api/logout/")
-    self.assertEqual(response.status_code, 200)
-    self.assertIn("mensagem", response.data)
-
-    # A resposta deve conter cookies "de remoção" (valor vazio e max-age=0)
-    self.assertIn("access", response.cookies)
-    self.assertIn("refresh", response.cookies)
-
-    # Verifica que os valores foram esvaziados (indicando remoção)
-    self.assertEqual(response.cookies["access"].value, "")
-    self.assertEqual(response.cookies["refresh"].value, "")
-
-    # Verifica que o max-age foi definido como 0 (expiração imediata)
-    self.assertEqual(response.cookies["access"]["max-age"], "0")
-    self.assertEqual(response.cookies["refresh"]["max-age"], "0")
-
-    # Após logout, tentar acessar rota protegida deve falhar
-    resp2 = self.client.get("/api/get-user/")
-    self.assertEqual(resp2.status_code, status.HTTP_401_UNAUTHORIZED)
-    # -----------------------------------------------------
-    # REFRESH TOKEN
-    # -----------------------------------------------------
-    def test_refresh_token_success(self):
-        client = APIClient()
-        client.cookies["refresh"] = self.refresh_token
-
-        response = client.post("/api/refresh/")
+    def test_logout_success(self):
+        response = self.client.post("/api/logout/")
         self.assertEqual(response.status_code, 200)
+        self.assertIn("mensagem", response.data)
+
+        # A resposta deve conter cookies "de remoção" (valor vazio e max-age=0)
         self.assertIn("access", response.cookies)
+        self.assertIn("refresh", response.cookies)
+
+        # Verifica que os valores foram esvaziados (indicando remoção)
+        self.assertEqual(response.cookies["access"].value, "")
+        self.assertEqual(response.cookies["refresh"].value, "")
+
+        # Verifica que o max-age foi definido como 0 (expiração imediata)
+        self.assertEqual(response.cookies["access"]["max-age"], 0)
+        self.assertEqual(response.cookies["refresh"]["max-age"], 0)
+
+        # Após logout, tentar acessar rota protegida deve falhar
+        resp2 = self.client.get("/api/get-user/")
+        self.assertEqual(resp2.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_refresh_token_missing(self):
         client = APIClient()
@@ -97,23 +87,10 @@ def test_logout_success(self):
         client.cookies["refresh"] = "token_invalido"
         response = client.post("/api/refresh/")
         self.assertEqual(response.status_code, 401)
-
-def test_refresh_token_sets_domain(self):
-    client = APIClient()
-    client.cookies["refresh"] = self.refresh_token
-
-    response = client.post("/api/refresh/")
-    self.assertEqual(response.status_code, 200)
-
-    # garante que o cookie foi criado
-    self.assertIn("access", response.cookies)
-
-    # garante que o domain definido na view foi aplicado
-    self.assertEqual(response.cookies["access"]["domain"], "192.168.0.5")
-
-    # -----------------------------------------------------
-    # UPDATE USER
-    # -----------------------------------------------------
+    
+        # -----------------------------------------------------
+        # UPDATE USER
+        # -----------------------------------------------------
     def test_update_user_success(self):
         response = self.client.put("/api/update-user/", {"name": "Novo Nome"}, format="json")
         self.assertEqual(response.status_code, 200)

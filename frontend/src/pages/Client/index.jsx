@@ -118,7 +118,7 @@ export const Client = () => {
 
               <Input
                 name="celular"
-                label="Celular (Opcional)"
+                label="Celular"
                 type="tel"
                 value={formData.celular}
                 placeholder="Digite o celular..."
